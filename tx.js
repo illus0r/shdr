@@ -8,6 +8,7 @@ function arrayToPixels(pixels){
 export function Tx(gl, options) {
 	let tx = gl.createTexture()
 	let filter, pixels
+	tx.loc = txCounter // index in unit textures
 	if(options!==undefined){
 		tx.w = options.w || 8
 		tx.h = options.h || 8
@@ -15,8 +16,8 @@ export function Tx(gl, options) {
 		filter = options.filter || gl.NEAREST
 		tx.type = options.type || 'sampler2D'
 		pixels = options.pixels ? arrayToPixels(options.pixels) : null
+		tx.loc = options.loc || tx.loc
 	}
-	tx.loc = txCounter // index in unit textures
 	gl.activeTexture(gl.TEXTURE0 + tx.loc)
 	if(tx.type == 'sampler2D'){
 		gl.bindTexture(gl.TEXTURE_2D, tx)
@@ -52,7 +53,6 @@ export function Tx(gl, options) {
 			gl.generateMipmap(gl.TEXTURE_2D)
 		});
 	}
-
 	txCounter++
 
 	tx.generateMipmap = () => {
@@ -60,7 +60,6 @@ export function Tx(gl, options) {
 		gl.bindTexture(gl.TEXTURE_2D, tx)
 		gl.generateMipmap(gl.TEXTURE_2D)
 	}
-	
 
 	return tx
 }
