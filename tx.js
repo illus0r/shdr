@@ -16,7 +16,8 @@ export function Tx(gl, options) {
 		filter = options.filter || gl.NEAREST
 		tx.type = options.type || 'sampler2D'
 		pixels = options.pixels ? arrayToPixels(options.pixels) : null
-		tx.loc = options.loc || tx.loc
+		if(Number.isInteger(options.loc))
+			tx.loc = options.loc
 	}
 	gl.activeTexture(gl.TEXTURE0 + tx.loc)
 	if(tx.type == 'sampler2D'){
