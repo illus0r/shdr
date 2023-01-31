@@ -1,7 +1,7 @@
 let txCounter = 0
 
 function arrayToPixels(pixels){
-	// fixme, текстуры разных типов
+	// TODO texture of different kinds
 	return new Float32Array(pixels)
 }
 

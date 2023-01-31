@@ -21,8 +21,6 @@ export function Pr(gl, fsStr, vsStr) {
 			void main(){
 				vec2 uv = gl_FragCoord.xy/res;
 				o = texture(tx,fract(uv));
-				// uv = (gl_FragCoord.xy*2.-res)/res.y;
-				// o+=sin(length(uv)*8.+time);
 				// o.a=1.;
 			}`
 	}
@@ -51,11 +49,9 @@ export function Pr(gl, fsStr, vsStr) {
 			gl.useProgram(pr)
 			let fb = gl.createFramebuffer()
 			gl.bindFramebuffer(gl.FRAMEBUFFER, fb)
-			let w=textures[0].w, h=textures[0].h // all textures sizes should match
+			let w=textures[0].w, h=textures[0].h // all textures sizes are expected to match
 			textures.forEach((tx,i)=>{
 				gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0+i,gl.TEXTURE_2D,tx,0)
-				// w=Math.min(w,tx.w) // может максимальную?
-				// h=Math.min(h,tx.h)
 			})
 			gl.drawBuffers(textures.map((d,i)=>gl.COLOR_ATTACHMENT0+i)) // list all attachments
 			gl.viewport(0,0,w,h)
@@ -71,7 +67,7 @@ export function Pr(gl, fsStr, vsStr) {
 			gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,tx,0)
 			gl.viewport(0,0,tx.w,tx.h)
 			gl.drawArrays(gl.TRIANGLES,0,3)
-			gl.deleteFramebuffer(fb)  // FIXME! changed only to check how realpixels work
+			gl.deleteFramebuffer(fb)
 			// gl.clearColor(1,0,0,1)
 			// gl.clear(gl.COLOR_BUFFER_BIT)
 		}
@@ -88,16 +84,12 @@ export function Pr(gl, fsStr, vsStr) {
 		gl.useProgram(pr)
 		for(let key of Object.keys(ufs)){
 			if(key in pr.ufs){
-				// console.log('if:')
 				pr.ufs[key].value = ufs[key]
 			}
 			else {
-				// console.log('else')
 				pr.ufs[key] = Uf(key, ufs[key])
 			}
 			let loc = gl.getUniformLocation(pr, pr.ufs[key].name)
-			// console.log('pr.ufs',pr.ufs)
-			// console.log('key:',key)
 			pr.ufs[key].setGlUniform(gl,loc,pr.ufs[key].value) // value for sampler2d is a JS texture object
 		}
 	}
