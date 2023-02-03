@@ -1,29 +1,42 @@
 let txCounter = 0
 
-function arrayToPixels(pixels){
-	// TODO texture of different kinds
-	return new Float32Array(pixels)
-}
+
 
 export function Tx(gl, options) {
 	let tx = gl.createTexture()
-	let filter, pixels
+	let filter, pixels, bits
 	tx.loc = txCounter // index in unit textures
 	if(options!==undefined){
 		tx.w = options.w || 8
 		tx.h = options.h || 8
 		tx.d = options.d || 8 // depth for 3d
 		filter = options.filter || gl.NEAREST
+		tx.bits = options.bits || 32
 		tx.type = options.type || 'sampler2D'
-		pixels = options.pixels ? arrayToPixels(options.pixels) : null
+		pixels = options.pixels ? options.pixels : null
 		if(Number.isInteger(options.loc))
 			tx.loc = options.loc
 	}
+	if(pixels){
+		if(tx.bits == 32){
+			pixels = new Float32Array(pixels)
+		}
+		else if(tx.bits == 8){
+			pixels = new Uint8Array(pixels)
+		}
+	}
+
+
 	gl.activeTexture(gl.TEXTURE0 + tx.loc)
 	if(tx.type == 'sampler2D'){
 		gl.bindTexture(gl.TEXTURE_2D, tx)
 		// gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,tx.w,tx.h,0,gl.RGBA,gl.UNSIGNED_BYTE,null)
-		gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA32F,tx.w,tx.h,0,gl.RGBA,gl.FLOAT,pixels)
+
+		if(tx.bits == 32)
+			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, tx.w, tx.h, 0, gl.RGBA, gl.FLOAT, pixels)
+		else if(tx.bits==8)
+			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, tx.w, tx.h, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+
 		gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,filter)
 		gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,filter)
 		gl.generateMipmap(gl.TEXTURE_2D)
