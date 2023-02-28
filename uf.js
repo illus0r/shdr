@@ -36,15 +36,14 @@ function getUfType(value) {
 	else if(typeof value == 'number'){
 		return 'float'
 	}
-	else if(typeof value === 'object' && 'type' in value) {// если крякает как текстура, это текстура
-		return value.type // ожидается sampler2D или sampler3D
+	else if(typeof value === 'object' && 'type' in value) {// quacks like a texture, then it probably is a texture
+		return value.type // sampler2D or sampler3D are expected
 	}
 }
 
 export function Uf(name, value, type) {
 	type = type || getUfType(value)
 	let setGlUniform = getUfSetter(type)
-	// console.log('setGlUniform:',setGlUniform)
 	let uf = {
 		name,
 		value,
