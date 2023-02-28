@@ -14,5 +14,4 @@ And then each frame do
 ```
 let freq = fft.get()
 ```
-
-To start FFT you need to click the document. Before that `fft.get()` will return zeroes
+Data is normalized [0…1]. To start FFT you need to click the document. Before that `fft.get()` will return zeroes
