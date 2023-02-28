@@ -2,10 +2,11 @@ Small webgl wrapper for generative art. Doesn't use any builders or preprocessor
 
 # FFT
 
-Initialize it. Pass a length of frequency bands you want to analyse:
+Initialize it:
 
 ```
-let fft = new FFT(32)
+let numberOfBands = 32
+let fft = new FFT(numberOfBands)
 ```
 
 And then each frame do
