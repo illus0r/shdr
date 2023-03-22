@@ -65,6 +65,7 @@ export function Tx(gl, options) {
 			gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
 			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tx.image)
 			gl.generateMipmap(gl.TEXTURE_2D)
+			if(options.callback)options.callback(tx)
 		});
 	}
 	txCounter++
