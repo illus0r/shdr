@@ -4,6 +4,7 @@ function getUfSetter(type){
 		case 'float': return (gl,loc,val)=>gl.uniform1f(loc,val)
 		case 'float[]': return (gl,loc,val)=>gl.uniform1fv(loc,val.flat())
 		case 'vec2': return (gl,loc,val)=>gl.uniform2fv(loc,val)
+		case 'vec3': return (gl,loc,val)=>gl.uniform3fv(loc,val)
 		case 'vec4': return (gl,loc,val)=>gl.uniform4fv(loc,val)
 		case 'vec3[]': return (gl,loc,val)=>gl.uniform3fv(loc,val.flat())
 		case 'sampler2D': return (gl,loc,tx)=>gl.uniform1i(loc,tx.loc)
