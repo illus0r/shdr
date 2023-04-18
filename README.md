@@ -27,3 +27,11 @@ Loading images is as easy as
 let u_tx_init = new Tx(gl, {src: './init.jpg', loc:3 })
 ```
 Mipmap is generated autamatically. But make sure your shader has enough time for image to load. If you use `if(frame<2){ /* init stuff */ }` it won't work
+
+# MIDI
+
+Just make
+```
+let midi = new MIDI()
+```
+And midi is an and auto-updating array of 64 values ranging from 0 to 1
