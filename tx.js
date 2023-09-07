@@ -13,6 +13,8 @@ export function Tx(gl, options) {
 		filter = options.filter || gl.NEAREST
 		tx.bits = options.bits || 32
 		tx.type = options.type || 'sampler2D'
+		if(options.d !== undefined)
+			tx.type = 'sampler3D'
 		pixels = options.pixels ? options.pixels : null
 		if(Number.isInteger(options.loc))
 			tx.loc = options.loc
@@ -42,7 +44,10 @@ export function Tx(gl, options) {
 		gl.generateMipmap(gl.TEXTURE_2D)
 	} else if(tx.type == 'sampler3D'){
 		gl.bindTexture(gl.TEXTURE_3D, tx)
-		gl.texImage3D(gl.TEXTURE_3D,0,gl.RGBA32F,tx.w,tx.h,tx.d,0,gl.RGBA,gl.FLOAT,pixels)
+		if(tx.bits == 32)
+			gl.texImage3D(gl.TEXTURE_3D,0,gl.RGBA32F,tx.w,tx.h,tx.d,0,gl.RGBA,gl.FLOAT,pixels)
+		else if(tx.bits==8)
+			gl.texImage3D(gl.TEXTURE_3D,0,gl.RGBA,tx.w,tx.h,tx.d,0,gl.RGBA,gl.UNSIGNED_BYTE,pixels)
 		gl.texParameteri(gl.TEXTURE_3D,gl.TEXTURE_MIN_FILTER,filter)
 		gl.texParameteri(gl.TEXTURE_3D,gl.TEXTURE_MAG_FILTER,filter)
 		gl.generateMipmap(gl.TEXTURE_3D)
