@@ -64,7 +64,6 @@ export function Pr(gl, fsStr, vsStr) {
 		else { // target is texture
 			gl.useProgram(pr)
 			let tx = target
-			// make fb
 			let fb = gl.createFramebuffer()
 			gl.bindFramebuffer(gl.FRAMEBUFFER, fb)
 			gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,tx,0)
