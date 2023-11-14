@@ -28,6 +28,9 @@ export function Tx(gl, options) {
 		}
 	}
 
+	if(tx.bits==32 && filter !== gl.NEAREST){
+		console.warn('32 bit texture interpolation is not supported on iPhones')
+	}
 
 	gl.activeTexture(gl.TEXTURE0 + tx.loc)
 	if(tx.type == 'sampler2D'){
