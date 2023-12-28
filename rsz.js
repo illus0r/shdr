@@ -10,7 +10,7 @@ export let rsz = (gl,width,height,pixelDensity) => {
 	if (needResize) {
 		cnv.width = width
 		cnv.height = height
-		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
-		return [width, height]
+		gl.viewport(0, 0, cnv.width, cnv.height)
 	}
+	return [width, height]
 }
