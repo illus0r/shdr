@@ -2,6 +2,22 @@ let txCounter = 0
 
 
 
+/**
+ * Creates a texture
+ * @param gl The WebGL rendering context.
+ * @param options Options for configuring the texture.
+ * @param [options.w=8] width
+ * @param [options.h=8] height
+ * @param [options.d=8] depth (for 3D textures)
+ * @param [options.filter=gl.NEAREST] The texture filtering method.
+ * @param [options.bits=32] The number of bits for texture (8 or 32)
+ * @param [options.type='sampler2D'] The type of texture (e.g., 'sampler2D', 'sampler3D').
+ * @param [options.loc] The index in unit textures.
+ * @param [options.pixels] Array(w*h*4), 0-255 for 8 bits, 0-1 for 32 bits
+ * @param [options.src] The image source URL or data URI
+ * @param [options.callback] A callback function to be executed after loading the image.
+ * @returns The created texture.
+ */
 export function Tx(gl, options) {
 	let tx = gl.createTexture()
 	let filter, pixels, bits
