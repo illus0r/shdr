@@ -7,8 +7,14 @@ function getUfSetter(type){
 		case 'vec3': return (gl,loc,val)=>gl.uniform3fv(loc,val)
 		case 'vec4': return (gl,loc,val)=>gl.uniform4fv(loc,val)
 		case 'vec3[]': return (gl,loc,val)=>gl.uniform3fv(loc,val.flat())
-		case 'sampler2D': return (gl,loc,tx)=>gl.uniform1i(loc,tx.loc)
-		case 'sampler3D': return (gl,loc,tx)=>gl.uniform1i(loc,tx.loc)
+		case 'sampler2D': return (gl,loc,tx)=>{
+			gl.bindTexture(gl.TEXTURE_2D,tx)
+			gl.uniform1i(loc,tx.loc)
+		}
+		case 'sampler3D': return (gl,loc,tx)=>{
+			gl.bindTexture(gl.TEXTURE_3D,tx)
+			gl.uniform1i(loc,tx.loc)
+		}
 	}
 }
 
