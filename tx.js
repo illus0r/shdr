@@ -31,7 +31,8 @@ export function Tx(gl, options) {
 		tx.type = options.type || 'sampler2D'
 		if(options.d !== undefined)
 			tx.type = 'sampler3D'
-		pixels = options.pixels ? options.pixels : null
+		// if pixels is an array, use it. Otherwise it's a URL or an HTML element
+		pixels = Array.isArray(options.pixels) ? options.pixels : null
 		if(Number.isInteger(options.loc))
 			tx.loc = options.loc
 	}
@@ -79,18 +80,33 @@ export function Tx(gl, options) {
 		// gl.generateMipmap(gl.TEXTURE_3D)
 	}
 	if(options.src!==undefined){
-		tx.image = new Image()
-		tx.image.src = options.src
-		tx.image.addEventListener('load', function(event) {
-			tx.w = event.srcElement.width
-			tx.h = event.srcElement.height
+		// if string, load image
+		if(typeof options.src === 'string'){
+			tx.image = new Image()
+			tx.image.src = options.src
+			tx.image.addEventListener('load', function(event) {
+				tx.w = event.srcElement.width
+				tx.h = event.srcElement.height
+				gl.activeTexture(gl.TEXTURE0 + tx.loc)
+				gl.bindTexture(gl.TEXTURE_2D, tx)
+				gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
+				gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tx.image)
+				gl.generateMipmap(gl.TEXTURE_2D)
+				if(options.callback)options.callback(tx)
+			});
+		}
+	}
+	// if html element img or video
+	// Может лучше в src класть? Или в отдельное свойство? Сложно становится уследить за всем
+	if(options.pixels instanceof HTMLImageElement || options.pixels instanceof HTMLVideoElement){
+			tx.w = options.pixels.width
+			tx.h = options.pixels.height
 			gl.activeTexture(gl.TEXTURE0 + tx.loc)
 			gl.bindTexture(gl.TEXTURE_2D, tx)
 			gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
-			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tx.image)
+			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, options.pixels)
 			gl.generateMipmap(gl.TEXTURE_2D)
 			if(options.callback)options.callback(tx)
-		});
 	}
 	txCounter++
 
