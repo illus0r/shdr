@@ -38,13 +38,46 @@ export function Pr(gl, fsStr, vsStr) {
 	gl.attachShader(pr,vs)
 	gl.attachShader(pr,fs)
 	gl.linkProgram(pr)
-	
-	pr.draw = (target) => {
+
+	pr.clear = (rgba, tx) => {
+		if(rgba===undefined) rgba = [0,0,0,1]
+
+		let clearCurrentFB = () => {
+			let blendSrc = gl.getParameter(gl.BLEND_SRC_RGB);
+			let blendDst = gl.getParameter(gl.BLEND_DST_RGB);
+			gl.blendFunc(gl.ONE, gl.ZERO);
+
+			gl.useProgram(pr)
+			gl.clearColor(rgba[0],rgba[1],rgba[2],rgba[3])
+			gl.clear(gl.COLOR_BUFFER_BIT)
+
+			gl.blendFunc(blendSrc, blendDst);
+		}
+
+		if(tx){
+			let framebuffer = gl.createFramebuffer()
+			gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+			gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tx, 0);
+
+			clearCurrentFB();
+
+			gl.deleteFramebuffer(framebuffer);
+		}
+		else {
+			clearCurrentFB();
+		}
+
+	}
+
+	pr.draw = (target, mode, count) => {
+		if(mode===undefined) mode = gl.TRIANGLES
+		if(count===undefined) count = 3
 		if(target===null || target === undefined){
 			gl.useProgram(pr)
 			gl.bindFramebuffer(gl.FRAMEBUFFER, null)
 			gl.viewport(0,0,gl.canvas.width, gl.canvas.height)
-			gl.drawArrays(gl.TRIANGLES,0,3)
+			gl.drawArrays(mode,0,count)
+			console.log('mode:',mode)
 		}
 		else if(Array.isArray(target)){
 			// target is a list of textures
@@ -58,7 +91,7 @@ export function Pr(gl, fsStr, vsStr) {
 			})
 			gl.drawBuffers(textures.map((d,i)=>gl.COLOR_ATTACHMENT0+i)) // list all attachments
 			gl.viewport(0,0,w,h)
-			gl.drawArrays(gl.TRIANGLES,0,3)
+			gl.drawArrays(mode,0,count)
 			gl.deleteFramebuffer(fb)
 		}
 		else { // target is texture
@@ -68,7 +101,7 @@ export function Pr(gl, fsStr, vsStr) {
 			gl.bindFramebuffer(gl.FRAMEBUFFER, fb)
 			gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,tx,0)
 			gl.viewport(0,0,tx.w,tx.h)
-			gl.drawArrays(gl.TRIANGLES,0,3)
+			gl.drawArrays(mode,0,count)
 			gl.deleteFramebuffer(fb)
 			// gl.clearColor(1,0,0,1)
 			// gl.clear(gl.COLOR_BUFFER_BIT)

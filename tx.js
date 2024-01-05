@@ -1,5 +1,9 @@
 let txCounter = 0
 
+// TODO split into subclasses according to cases:
+// - from a src (image, maybe video?)
+// - from an html element
+// - 3d texture
 
 
 /**
