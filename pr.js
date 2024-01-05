@@ -77,7 +77,6 @@ export function Pr(gl, fsStr, vsStr) {
 			gl.bindFramebuffer(gl.FRAMEBUFFER, null)
 			gl.viewport(0,0,gl.canvas.width, gl.canvas.height)
 			gl.drawArrays(mode,0,count)
-			console.log('mode:',mode)
 		}
 		else if(Array.isArray(target)){
 			// target is a list of textures
